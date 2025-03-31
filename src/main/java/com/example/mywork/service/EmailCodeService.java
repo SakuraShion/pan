@@ -3,6 +3,8 @@ package com.example.mywork.service;
 import com.example.mywork.entity.EmailCode;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import javax.mail.MessagingException;
+
 /**
  * <p>
  *  服务类
@@ -13,6 +15,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface EmailCodeService extends IService<EmailCode> {
 
-    void sendEmailCode(String email,Integer type);
+    void sendEmailCode(String email,Integer type) throws MessagingException;
 
 }

@@ -9,6 +9,7 @@ import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.Collection;
+import java.util.concurrent.TimeUnit;
 
 @Component
 public class RedisUtils<K,V> {
@@ -37,6 +38,27 @@ public class RedisUtils<K,V> {
      */
     public V get(String key){
         return key!=null?redisTemplate.opsForValue().get(key):null;
+    }
+
+    /**
+     * 设置时间
+     * @param key
+     * @param value
+     * @param time
+     * @return
+     */
+
+    public boolean setex(K key,V value,long time){
+        if (time>0){
+            redisTemplate.opsForValue().set( key,value,time, TimeUnit.SECONDS);
+        }else {
+            redisTemplate.opsForValue().set(key,value);
+        }return true;
+    }
+
+    public boolean set(K key,V value){
+        redisTemplate.opsForValue().set(key,value);
+        return true;
     }
 
 

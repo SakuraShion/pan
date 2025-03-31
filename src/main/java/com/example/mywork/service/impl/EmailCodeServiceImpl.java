@@ -1,6 +1,9 @@
 package com.example.mywork.service.impl;
 
+import com.example.mywork.annotation.GlobalInterceptor;
+import com.example.mywork.commpone.RedisCommpont;
 import com.example.mywork.config.EmailConfig;
+import com.example.mywork.dto.SysSettingDto;
 import com.example.mywork.entity.EmailCode;
 import com.example.mywork.entity.constants.Constants;
 import com.example.mywork.mapper.EmailCodeMapper;
@@ -47,13 +50,19 @@ public class EmailCodeServiceImpl extends ServiceImpl<EmailCodeMapper, EmailCode
     @Resource
     private EmailConfig emailConfig;
 
+    @Resource
+    private RedisCommpont redisCommpont;
+
     @Override
+
     @Transactional(rollbackFor = Exception.class)
-    public void sendEmailCode(String email, Integer type) {
+    public void sendEmailCode(String email, Integer type) throws MessagingException {
         /**
          * status 0 ==注册 1==找回密码
          */
         String code= StringUtils.getRandomString(Constants.LENGTH);
+        //发送邮箱
+  //      sendMailMessage(code,email);
         //验证码置为无效
         this.baseMapper.disableEmailCode(email);
         EmailCode emailCode=new EmailCode();
@@ -61,6 +70,7 @@ public class EmailCodeServiceImpl extends ServiceImpl<EmailCodeMapper, EmailCode
         emailCode.setCode(code);
         emailCode.setStatus(Constants.ZERO);
         emailCode.setCreateTime(LocalDateTime.now());
+
         this.baseMapper.insert(emailCode);
     }
 
@@ -70,8 +80,9 @@ public class EmailCodeServiceImpl extends ServiceImpl<EmailCodeMapper, EmailCode
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
             helper.setFrom(emailConfig.getEmailFrom());
             helper.setTo(email);
-            helper.setSubject("测试邮件01");//标题
-            helper.setText("测试");//文本
+            SysSettingDto sysSettingDto = redisCommpont.getsysSettingDto();
+            helper.setSubject(sysSettingDto.getRegisterMail());//标题
+            helper.setText(String.format(sysSettingDto.getRegisterEmailContent(),code));//文本
             helper.setSentDate(new Date());
             mailSender.send(mimeMessage);
         }catch (Exception e){

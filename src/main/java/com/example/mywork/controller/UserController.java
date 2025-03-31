@@ -1,10 +1,13 @@
 package com.example.mywork.controller;
 
 
+import com.example.mywork.annotation.GlobalInterceptor;
+import com.example.mywork.annotation.VerfiyParam;
 import com.example.mywork.dto.CreateImageCode;
 import com.example.mywork.entity.EmailCode;
 import com.example.mywork.entity.User;
 import com.example.mywork.entity.constants.Constants;
+import com.example.mywork.entity.enums.VerifyRegexEnum;
 import com.example.mywork.entity.vo.ResponseVo;
 import com.example.mywork.service.EmailCodeService;
 import com.example.mywork.service.UserService;
@@ -15,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
@@ -53,15 +57,36 @@ public class UserController {
         vCode.write(response.getOutputStream());
     }
 
+    @GlobalInterceptor
+    @GetMapping("/register")
+    private ResponseVo register(HttpSession httpSession,
+                               @VerfiyParam(required = true,regex = VerifyRegexEnum.EMALL) String email,
+                               @VerfiyParam(required = true) String checkcode,
+                               @VerfiyParam(required = true) String type,
+                               @VerfiyParam(required = true) String nickName,
+                                @VerfiyParam(required = true,regex = VerifyRegexEnum.PASSWORD) String password){
+        try {
+            if (!checkcode.equalsIgnoreCase((String) httpSession.getAttribute(Constants.CHECK_CODE_KEY))){
+                return ResponseVo.fail("验证码不正确");
+            }else {
+
+            }
+        }finally {
+            httpSession.removeAttribute(Constants.CHECK_CODE_KEY);
+        }
+        return ResponseVo.ok("注册成功");
+
+    }
+
     @GetMapping("/sendEmailCode")
-    public ResponseVo sendEmailCode(HttpSession session,String email,String checkCode,Integer type) throws IOException {
+    @GlobalInterceptor(checkParasm = true)
+    public ResponseVo sendEmailCode(HttpSession session,String email,String checkCode,Integer type) throws IOException, MessagingException {
         if (session.getAttribute(Constants.CHECK_CODE_KEY_EMAIL)!=null&&!checkCode.equalsIgnoreCase(String.valueOf(session.getAttribute(Constants.CHECK_CODE_KEY_EMAIL)))){
             session.removeAttribute(Constants.CHECK_CODE_KEY_EMAIL);
             return ResponseVo.fail("验证码不正确");
         }
         if (type==0) {
             User byEamil = userService.getByEamil(email);
-
             if (byEamil != null) {
                 return ResponseVo.fail("邮箱已存在");
             }

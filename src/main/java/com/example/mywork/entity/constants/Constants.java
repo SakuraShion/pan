@@ -7,4 +7,6 @@ public class Constants {
     public static final Integer LENGTH=5;
 
     public static final Integer ZERO=0;
+
+    public static final String REDIS_KEY_SYS_SETTING="pan:syssetting:";
 }

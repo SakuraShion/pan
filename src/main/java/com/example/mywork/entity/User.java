@@ -52,7 +52,7 @@ public class User extends Model<User> {
     private LocalDateTime lastLoginTime;
 
     @ApiModelProperty(value = "状态")
-    private Boolean status;
+    private Integer status;
 
     @ApiModelProperty(value = "使用空间单位 byte")
     private Long useSpace;

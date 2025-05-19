@@ -23,6 +23,7 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Date;
 
 
@@ -46,6 +47,9 @@ public class EmailCodeServiceImpl extends ServiceImpl<EmailCodeMapper, EmailCode
 
     @Resource
     private JavaMailSender mailSender;
+
+    @Resource
+    private EmailCodeMapper emailCodeMapper;
 
     @Resource
     private EmailConfig emailConfig;
@@ -72,6 +76,16 @@ public class EmailCodeServiceImpl extends ServiceImpl<EmailCodeMapper, EmailCode
         emailCode.setCreateTime(LocalDateTime.now());
 
         this.baseMapper.insert(emailCode);
+    }
+
+    @Override
+    public boolean checkCode(String email, String code) {
+        EmailCode emailCode = emailCodeMapper.selectByCode(code);
+        if (emailCode.getStatus()==1&&System.currentTimeMillis()-emailCode.getCreateTime().toInstant(ZoneOffset.of("+8")).toEpochMilli()>Constants.LENGTH_15*60*1000) {}
+        if (emailCode!=null && emailCode.getEmail().equals(email)) {
+            return true;
+        }
+        return false;
     }
 
     private void sendMailMessage(String code,String email) throws MessagingException {

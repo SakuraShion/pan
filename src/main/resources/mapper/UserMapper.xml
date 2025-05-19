@@ -29,4 +29,11 @@
     </where>
     </select>
 
+    <select id="selectByNickName" resultMap="BaseResultMap">
+        select user_id, password, nick_name, email, qq_open_id, qq_avater, join_time, last_login_time, status, use_space, total_space
+        from user <where>
+        nick_name=#{nickName}
+    </where>
+    </select>
+
 </mapper>

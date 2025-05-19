@@ -13,10 +13,7 @@ import com.example.mywork.service.EmailCodeService;
 import com.example.mywork.service.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletResponse;
@@ -69,6 +66,7 @@ public class UserController {
             if (!checkcode.equalsIgnoreCase((String) httpSession.getAttribute(Constants.CHECK_CODE_KEY))){
                 return ResponseVo.fail("验证码不正确");
             }else {
+                userService.register(email,checkcode,nickName,password);
 
             }
         }finally {

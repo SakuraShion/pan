@@ -1,5 +1,7 @@
 package com.example.mywork.utils;
 
+import org.apache.commons.codec.cli.Digest;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import java.util.Random;
@@ -17,5 +19,8 @@ public class StringUtils {
             return true;
         }
         return false;
+    }
+    public static String encodeByMd5(String str) {
+        return str==null?null:DigestUtils.md2Hex(str);
     }
 }

@@ -17,4 +17,6 @@ public interface EmailCodeService extends IService<EmailCode> {
 
     void sendEmailCode(String email,Integer type) throws MessagingException;
 
+    boolean checkCode(String email,String code);
+
 }

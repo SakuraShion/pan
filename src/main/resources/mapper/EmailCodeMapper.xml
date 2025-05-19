@@ -20,5 +20,14 @@
         update email_code set status=1 where email=#{email} and status=0
     </update>
 
+    <select id="selectByCode" resultMap="BaseResultMap">
+        select
+  `code`,
+  `create_time`,
+  `status` from email_code <where>
+        code=#{code}
+        </where>
+    </select>
+
 
 </mapper>

@@ -2,6 +2,10 @@ package com.example.mywork.aspect;
 
 import com.example.mywork.annotation.GlobalInterceptor;
 import com.example.mywork.annotation.VerfiyParam;
+import com.example.mywork.dto.SessionWebUserDto;
+import com.example.mywork.entity.constants.Constants;
+import com.example.mywork.entity.query.UserInfoQuery;
+import com.example.mywork.service.UserService;
 import com.example.mywork.utils.StringUtils;
 import com.example.mywork.utils.VerifyUtils;
 import org.aspectj.lang.JoinPoint;
@@ -10,7 +14,13 @@ import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
@@ -25,6 +35,9 @@ public class GlobalOPerationAspect {
 
     private final String TYPE_LONG = "java.lang.Long";
 
+    @Resource
+    private UserService userService;
+
     @Pointcut("@annotation(com.example.mywork.annotation.GlobalInterceptor)")
     private void requestInterceptor(){
 
@@ -37,10 +50,27 @@ public class GlobalOPerationAspect {
         Class<?>[] parameterTypes = ((MethodSignature) joinPoint.getSignature()).getMethod().getParameterTypes();
         Method method = target.getClass().getMethod(name, parameterTypes);
         GlobalInterceptor annotation = method.getAnnotation(GlobalInterceptor.class);
-
+/**
+ * 校验登录
+ */
+if (annotation.checkLogin()|| annotation.checkAdmin()){
+    checkLogin(annotation.checkAdmin());
+}
         if (annotation.checkParasm()){
             validateParams(method,args);
         }
+    }
+
+    private Integer checkLogin(Boolean checkAdmin){
+        HttpServletRequest request=((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
+        HttpSession session = request.getSession();
+        SessionWebUserDto userDto= (SessionWebUserDto) session.getAttribute(Constants.SESSION_KEY);
+        if (userDto==null&&userService.findListByParam(new UserInfoQuery()))
+
+        if (null==userDto){
+            return 600;
+        }
+        return 200;
     }
 
     private void validateParams(Method m,Object[] args) throws ClassNotFoundException, IllegalAccessException {

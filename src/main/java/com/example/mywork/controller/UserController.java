@@ -4,6 +4,7 @@ package com.example.mywork.controller;
 import com.example.mywork.annotation.GlobalInterceptor;
 import com.example.mywork.annotation.VerfiyParam;
 import com.example.mywork.dto.CreateImageCode;
+import com.example.mywork.dto.SessionWebUserDto;
 import com.example.mywork.entity.EmailCode;
 import com.example.mywork.entity.User;
 import com.example.mywork.entity.constants.Constants;
@@ -91,6 +92,45 @@ public class UserController {
         }
         emailCodeService.sendEmailCode(email,type);
         return ResponseVo.ok("发送成功");
+    }
+
+    @GlobalInterceptor
+    @GetMapping("/login")
+    private ResponseVo login(HttpSession httpSession,
+                                @VerfiyParam(required = true,regex = VerifyRegexEnum.EMALL) String email,
+                                @VerfiyParam(required = true) String checkcode,
+                                @VerfiyParam(required = true,regex = VerifyRegexEnum.PASSWORD) String password){
+        try {
+            if (!checkcode.equalsIgnoreCase((String) httpSession.getAttribute(Constants.CHECK_CODE_KEY))){
+                return ResponseVo.fail("验证码不正确");
+            }
+            SessionWebUserDto login = userService.login(email, password);
+            httpSession.setAttribute(Constants.SESSION_KEY,login);
+        }finally {
+            httpSession.removeAttribute(Constants.CHECK_CODE_KEY);
+        }
+        return ResponseVo.ok("登錄成功");
+
+    }
+
+    @PostMapping("/resetPwd")
+    @GlobalInterceptor(checkParasm = true)
+    public ResponseVo resetPwd(HttpSession httpSession,
+                               @VerfiyParam(required = true,regex = VerifyRegexEnum.EMALL,max = 150)String email,
+                               @VerfiyParam(required = true,regex = VerifyRegexEnum.PASSWORD,min = 8,max = 18) String password,
+                               @VerfiyParam(required = true) String checkcode,
+                               @VerfiyParam(required = true) String emailCode){
+        if (!checkcode.equalsIgnoreCase((String) httpSession.getAttribute(Constants.CHECK_CODE_KEY))){
+            return ResponseVo.fail("密碼錯誤");
+        }
+        return userService.resetWord(email,password,emailCode);
+    }
+
+    @PostMapping("/logout")
+    @GlobalInterceptor(checkParasm = true)
+    public ResponseVo logout(HttpSession httpSession){
+        httpSession.invalidate();
+        return ResponseVo.ok("成功");
     }
 
 

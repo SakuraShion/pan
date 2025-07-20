@@ -42,8 +42,6 @@ public class EmailCodeServiceImpl extends ServiceImpl<EmailCodeMapper, EmailCode
     private final static Logger logger = LoggerFactory.getLogger(EmailCodeServiceImpl.class);
 
 
-    @Autowired
-    private UserService userService;
 
     @Resource
     private JavaMailSender mailSender;

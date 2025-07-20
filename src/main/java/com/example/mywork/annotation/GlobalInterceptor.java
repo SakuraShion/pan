@@ -15,4 +15,11 @@ public @interface GlobalInterceptor {
      */
 
     boolean checkParasm() default false;
+
+    /**
+     * 校验登录
+     */
+    boolean checkLogin() default true;
+
+    boolean checkAdmin() default true;
 }

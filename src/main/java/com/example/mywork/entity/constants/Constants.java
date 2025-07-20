@@ -12,4 +12,7 @@ public class Constants {
     public static final Long MB=1024*1024L;
 
     public static final String REDIS_KEY_SYS_SETTING="pan:syssetting:";
+
+    public static final String REDIS_KEY_USER_USE="pan:user:spaceuser";
+    public static final String SESSION_KEY = "session_key";
 }

@@ -36,4 +36,15 @@
     </where>
     </select>
 
+    <select id="selectByEmail" resultMap="BaseResultMap">
+        select user_id, password, nick_name, email, qq_open_id, qq_avater, join_time, last_login_time, status, use_space, total_space
+        from user <where>
+        email=#{email}
+    </where>
+    </select>
+
+    <update id="setPassWord">
+        update user <set> password=#{s} <where> email=#{email} </where>  </set>
+    </update>
+
 </mapper>

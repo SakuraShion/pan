@@ -3,9 +3,11 @@ package com.example.mywork.service.impl;
 import com.example.mywork.commpone.RedisCommpont;
 import com.example.mywork.dto.SessionWebUserDto;
 import com.example.mywork.dto.SysSettingDto;
+import com.example.mywork.dto.UserSpaceDto;
 import com.example.mywork.entity.User;
 import com.example.mywork.entity.constants.Constants;
 import com.example.mywork.entity.constants.UserStatusEnum;
+import com.example.mywork.entity.vo.ResponseVo;
 import com.example.mywork.mapper.UserMapper;
 import com.example.mywork.service.EmailCodeService;
 import com.example.mywork.service.UserService;
@@ -31,8 +33,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Resource
     private UserMapper userMapper;
 
-    @Resource
-    private EmailCodeService emailService;
 
     @Resource
     private EmailCodeService emailCodeService;
@@ -88,8 +88,29 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             dto.setIsAdmin(byEmail.getUserId().equals("admin"));
             dto.setAvatar(byEmail.getQqAvater());
             //用户空间
+            UserSpaceDto userSpaceDto=new UserSpaceDto();
+            //userSpaceDto.setTotalSpace();
+            userSpaceDto.setUserSpace(byEmail.getUseSpace());
+            redisCommpont.saveUserSpaceUse(byEmail.getUserId(),userSpaceDto);
             return dto;
         }
         return null;
+    }
+
+    @Override
+    public ResponseVo resetWord(String email, String password, String emailCode) {
+        User user = this.userMapper.selectByEmail(email);
+        if (user==null){
+            return ResponseVo.fail("账号不存在");
+        }
+        boolean b = emailCodeService.checkCode(email, emailCode);
+        if (b==true) {
+            String s = StringUtils.encodeByMd5(password);
+            Integer i = userMapper.setPassWord(email, s);
+            if (i==1) {
+                return ResponseVo.ok("重置成功");
+            }
+        }
+        return ResponseVo.fail("重置失败");
     }
 }

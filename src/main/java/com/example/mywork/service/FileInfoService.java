@@ -2,6 +2,7 @@ package com.example.mywork.service;
 
 import com.example.mywork.entity.FileInfo;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.example.mywork.entity.vo.PaginationResultVO;
 import com.example.mywork.entity.vo.ResponseVo;
 
 /**
@@ -14,5 +15,5 @@ import com.example.mywork.entity.vo.ResponseVo;
  */
 public interface FileInfoService extends IService<FileInfo> {
 
-    ResponseVo findListByPage(Integer category, Object userId);
+    PaginationResultVO<FileInfo> findListByPage(Integer category, Object userId, Integer pageOn);
 }

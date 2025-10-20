@@ -27,4 +27,73 @@
         file_id, user_id, file_md5, file_pid, file_size, file_name, file_cover, file_path, create_time, last_update_time, folder_type, file_category, file_type, status, recovery_time, del_flag
     </sql>
 
+    <select id="selectUseSpaceByUserId" resultMap="BaseResultMap">
+        select file_id, user_id, file_md5, file_pid, file_size, file_name, file_cover, file_path, create_time, last_update_time, folder_type, file_category, file_type, status, recovery_time, del_flag from
+             file_info where user_id=#{userId}
+    </select>
+
+    <!-- 通用查询条件列-->
+    <sql id="query_condition">
+        <where>
+            <include refid="Base_Column_List"/>
+            <if test="query.fileIdFuzzy!= null  and query.fileIdFuzzy!=''">
+                and file_id like concat('%', #{query.fileIdFuzzy}, '%')
+            </if>
+            <if test="query.userIdFuzzy!= null  and query.userIdFuzzy!=''">
+                and user_id like concat('%', #{query.userIdFuzzy}, '%')
+            </if>
+            <if test="query.fileMd5Fuzzy!= null  and query.fileMd5Fuzzy!=''">
+                and file_md5 like concat('%', #{query.fileMd5Fuzzy}, '%')
+            </if>
+            <if test="query.filePidFuzzy!= null  and query.filePidFuzzy!=''">
+                and file_pid like concat('%', #{query.filePidFuzzy}, '%')
+            </if>
+            <if test="query.fileNameFuzzy!= null  and query.fileNameFuzzy!=''">
+                and file_name like concat('%', #{query.fileNameFuzzy}, '%')
+            </if>
+            <if test="query.fileCoverFuzzy!= null  and query.fileCoverFuzzy!=''">
+                and file_cover like concat('%', #{query.fileCoverFuzzy}, '%')
+            </if>
+            <if test="query.filePathFuzzy!= null  and query.filePathFuzzy!=''">
+                and file_path like concat('%', #{query.filePathFuzzy}, '%')
+            </if>
+            <if test="query.createTimeStart!= null and query.createTimeStart!=''">
+                <![CDATA[ and  create_time>=str_to_date(#{query.createTimeStart}, '%Y-%m-%d') ]]>
+            </if>
+            <if test="query.createTimeEnd!= null and query.createTimeEnd!=''">
+                <![CDATA[ and  create_time< date_sub(str_to_date(#{query.createTimeEnd},'%Y-%m-%d'),interval -1 day) ]]>
+            </if>
+            <if test="query.lastUpdateTimeStart!= null and query.lastUpdateTimeStart!=''">
+                <![CDATA[ and  last_update_time>=str_to_date(#{query.lastUpdateTimeStart}, '%Y-%m-%d') ]]>
+            </if>
+            <if test="query.lastUpdateTimeEnd!= null and query.lastUpdateTimeEnd!=''">
+                <![CDATA[ and  last_update_time< date_sub(str_to_date(#{query.lastUpdateTimeEnd},'%Y-%m-%d'),interval -1 day) ]]>
+            </if>
+            <if test="query.recoveryTimeStart!= null and query.recoveryTimeStart!=''">
+                <![CDATA[ and  recovery_time>=str_to_date(#{query.recoveryTimeStart}, '%Y-%m-%d') ]]>
+            </if>
+            <if test="query.recoveryTimeEnd!= null and query.recoveryTimeEnd!=''">
+                <![CDATA[ and  recovery_time< date_sub(str_to_date(#{query.recoveryTimeEnd},'%Y-%m-%d'),interval -1 day) ]]>
+            </if>
+            <if test="query.queryExpire!=null and query.queryExpire">
+                <![CDATA[  and recovery_time< date_sub(now(),interval 10 day)]]>
+            </if>
+        </where>
+    </sql>
+
+    <select id="selectList" resultMap="BaseResultMap">
+        select  <include refid="Base_Column_List"/>
+            <if test="query.queryNickName!=null and query.queryNickName">
+        ,(select nick_name from user_info u where u.user_id = f.user_id) nickName
+            </if>
+        FROM file_info f
+        <include refid="query_condition"/>
+        <if test="query.orderBy!=null">
+            order by ${query.orderBy}
+        </if>
+        <if test="query.simplePage!=null">
+            limit #{query.simplePage.start},#{query.simplePage.end}
+        </if>
+    </select>
+
 </mapper>

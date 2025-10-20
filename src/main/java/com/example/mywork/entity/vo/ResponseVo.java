@@ -23,5 +23,17 @@ public class ResponseVo <T>{
         vo.setInfo(meg);
         return vo;
     }
+    public static ResponseVo ok(String meg,Object data){
+        ResponseVo vo = new ResponseVo();
+        vo.setCode(200);
+        vo.setInfo(meg);
+        vo.setData(data);
+        return vo;
+    }
+
+    public ResponseVo setData(T data) {
+        this.data = data;
+        return this;
+    }
 
 }

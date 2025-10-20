@@ -61,7 +61,7 @@ public class FileInfo extends Model<FileInfo> {
 
 
     @Override
-    protected Serializable pkVal() {
+    public Serializable pkVal() {
         return this.fileId;
     }
 

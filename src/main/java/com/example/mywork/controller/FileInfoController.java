@@ -22,10 +22,11 @@ public class FileInfoController {
      */
     @RequestMapping("loadDataList")
     @GlobalInterceptor
-    public ResponseVo loadDataList(HttpSession session, String category) {
+    public ResponseVo loadDataList(HttpSession session, String category,int pageOn) {
         FileCategoryEnums fileCategory= FileCategoryEnums.getFileCategory(category);
         if (null!=category){
-            return fileInfoService.findListByPage(fileCategory.getCategory(),session.getAttribute("userId"));
+            return ResponseVo.ok("成功").setData(fileInfoService.findListByPage(fileCategory.getCategory(),session.getAttribute("userId"),pageOn));
         }
+        return ResponseVo.fail("失败");
     }
 }

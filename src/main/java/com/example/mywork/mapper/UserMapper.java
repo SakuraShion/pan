@@ -2,6 +2,7 @@ package com.example.mywork.mapper;
 
 import com.example.mywork.entity.User;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.example.mywork.entity.po.UserInfo;
 
 /**
  * <p>
@@ -20,4 +21,6 @@ public interface UserMapper extends BaseMapper<User> {
     User selectByEmail(String email);
 
     Integer setPassWord(String email, String s);
+
+    UserInfo selectByUserId(String userId);
 }

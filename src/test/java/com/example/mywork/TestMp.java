@@ -53,7 +53,7 @@ public class TestMp {
                 .setNaming(NamingStrategy.underline_to_camel)//数据库表映射到实体的命名策略
                 .setColumnNaming(NamingStrategy.underline_to_camel)//列的命名也支持驼峰命名规则
                 //.setTablePrefix("tbl_")//数据库表的前缀
-                .setInclude("email_code")//设置要映射的表名，这里可以写多个
+                .setInclude("file_info")//设置要映射的表名，这里可以写多个
                 .setEntityLombokModel(true)  //使用Lombok开启注解
                 .setLogicDeleteFieldName("deleted")//设置逻辑删除字段
                 .setTableFillList(tableFills)//设置自动填充配置

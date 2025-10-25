@@ -9,6 +9,8 @@ public class Constants {
 
     public static final Integer ZERO=0;
 
+    public static final String SESSION_SHARE_KEY = "session_share_key_";
+
     public static final Long MB=1024*1024L;
 
     /**

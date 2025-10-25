@@ -3,8 +3,12 @@ package com.example.mywork.aspect;
 import com.example.mywork.annotation.GlobalInterceptor;
 import com.example.mywork.annotation.VerfiyParam;
 import com.example.mywork.dto.SessionWebUserDto;
+import com.example.mywork.entity.config.AppConfig;
 import com.example.mywork.entity.constants.Constants;
+import com.example.mywork.entity.enums.ResponseCodeEnum;
+import com.example.mywork.entity.po.UserInfo;
 import com.example.mywork.entity.query.UserInfoQuery;
+import com.example.mywork.exception.BusinessException;
 import com.example.mywork.service.UserService;
 import com.example.mywork.utils.StringUtils;
 import com.example.mywork.utils.VerifyUtils;
@@ -24,6 +28,7 @@ import javax.servlet.http.HttpSession;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
+import java.util.List;
 
 @Aspect
 @Component
@@ -34,6 +39,9 @@ public class GlobalOPerationAspect {
     private final String TYPE_INTEGER = "java.lang.Integer";
 
     private final String TYPE_LONG = "java.lang.Long";
+
+    @Resource
+    private AppConfig appConfig;
 
     @Resource
     private UserService userService;
@@ -61,16 +69,28 @@ if (annotation.checkLogin()|| annotation.checkAdmin()){
         }
     }
 
-    private Integer checkLogin(Boolean checkAdmin){
+    private void checkLogin(Boolean checkAdmin){
         HttpServletRequest request=((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
         HttpSession session = request.getSession();
         SessionWebUserDto userDto= (SessionWebUserDto) session.getAttribute(Constants.SESSION_KEY);
-        if (userDto==null&&userService.findListByParam(new UserInfoQuery()))
-
-        if (null==userDto){
-            return 600;
+        if (userDto==null&&!appConfig.getDev().equals("dev")&&appConfig.getDev()!=null){
+            List<UserInfo> userInfoList = userService.findListByParam(new UserInfoQuery());
+            if (!userInfoList.isEmpty()){
+                UserInfo userInfo = userInfoList.get(0);
+                userDto = new SessionWebUserDto();
+                userDto.setUserId(userInfo.getUserId());
+                userDto.setNickName(userInfo.getNickName());
+                userDto.setIsAdmin(true);
+                session.setAttribute(Constants.SESSION_KEY, userDto);
+            }
         }
-        return 200;
+        if (null == userDto) {
+            throw new BusinessException(ResponseCodeEnum.CODE_901);
+        }
+
+        if (checkAdmin && !userDto.getIsAdmin()) {
+            throw new BusinessException(ResponseCodeEnum.CODE_404);
+        }
     }
 
     private void validateParams(Method m,Object[] args) throws ClassNotFoundException, IllegalAccessException {

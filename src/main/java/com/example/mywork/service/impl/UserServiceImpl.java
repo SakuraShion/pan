@@ -7,7 +7,10 @@ import com.example.mywork.dto.UserSpaceDto;
 import com.example.mywork.entity.User;
 import com.example.mywork.entity.constants.Constants;
 import com.example.mywork.entity.constants.UserStatusEnum;
+import com.example.mywork.entity.po.UserInfo;
+import com.example.mywork.entity.query.UserInfoQuery;
 import com.example.mywork.entity.vo.ResponseVo;
+import com.example.mywork.exception.BusinessException;
 import com.example.mywork.mapper.UserMapper;
 import com.example.mywork.service.EmailCodeService;
 import com.example.mywork.service.UserService;
@@ -17,7 +20,9 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 /**
  * <p>
@@ -112,5 +117,24 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             }
         }
         return ResponseVo.fail("重置失败");
+    }
+
+    @Override
+    public List<UserInfo> findListByParam(UserInfoQuery userInfoQuery) {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public void resetPwd(String email, String password, String emailCode) {
+        User user = this.userMapper.selectByEmail(email);
+        if (user==null){
+            throw new BusinessException("邮箱账号不存在");
+        }
+
+        emailCodeService.checkCode(email, emailCode);
+
+        UserInfo userInfo=new UserInfo();
+        userInfo.setPassword(StringUtils.encodeByMd5(password));
+        this.userMapper.updateByEmail(userInfo,email);
     }
 }

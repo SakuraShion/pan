@@ -23,4 +23,6 @@ public interface UserMapper extends BaseMapper<User> {
     Integer setPassWord(String email, String s);
 
     UserInfo selectByUserId(String userId);
+
+    Integer updateByEmail(UserInfo userInfo, String email);
 }

@@ -53,4 +53,41 @@ select
 from user where user_id=#{userId}
     </select>
 
+    <update id="updateByEmail">
+        UPDATE user
+        <set>
+            <if test="bean.userId != null">
+                user_id = #{userInfo.userId},
+            </if>
+            <if test="bean.nickName != null">
+                nick_name = #{userInfo.nickName},
+            </if>
+            <if test="bean.qqOpenId != null">
+                qq_open_id = #{userInfo.qqOpenId},
+            </if>
+            <if test="bean.qqAvatar != null">
+                qq_avatar = #{userInfo.qqAvatar},
+            </if>
+            <if test="bean.password != null">
+                password = #{userInfo.password},
+            </if>
+            <if test="bean.joinTime != null">
+                join_time = #{userInfo.joinTime},
+            </if>
+            <if test="bean.lastLoginTime != null">
+                last_login_time = #{userInfo.lastLoginTime},
+            </if>
+            <if test="bean.status != null">
+                status = #{userInfo.status},
+            </if>
+            <if test="bean.useSpace != null">
+                use_space = #{userInfo.useSpace},
+            </if>
+            <if test="bean.totalSpace != null">
+                total_space = #{userInfo.totalSpace},
+            </if>
+        </set>
+        where email=#{email}
+    </update>
+
 </mapper>

@@ -3,6 +3,7 @@ package com.example.mywork.service;
 import com.example.mywork.dto.SessionWebUserDto;
 import com.example.mywork.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.example.mywork.entity.po.UserInfo;
 import com.example.mywork.entity.query.UserInfoQuery;
 import com.example.mywork.entity.vo.ResponseVo;
 
@@ -34,4 +35,6 @@ public interface UserService extends IService<User> {
     ResponseVo resetWord(String email, String password, String emailCode);
 
     List<UserInfo> findListByParam(UserInfoQuery userInfoQuery);
+
+    void resetPwd(String email, String password, String emailCode);
 }

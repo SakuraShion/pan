@@ -9,6 +9,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
 
 public class ScaleFilter {
     private static final Logger logger = LoggerFactory.getLogger(ScaleFilter.class);
@@ -22,6 +23,7 @@ public class ScaleFilter {
             if (width<=thumbnailWidth){
                 return false;
             }
+            compressImage(file, thumbnailWidth, targetFile, delSource);
         }catch (IOException e){
             e.printStackTrace();
         }
@@ -37,6 +39,22 @@ public class ScaleFilter {
             }
         } catch (Exception e) {
             logger.error("压缩图片失败");
+        }
+    }
+    public static void compressImageWidthPercentage(File sourceFile, BigDecimal widthPercentage, File targetFile) {
+        try {
+            BigDecimal width = widthPercentage.multiply(BigDecimal.valueOf(ImageIO.read(sourceFile).getWidth()));
+            compressImage(sourceFile,width.intValue(),targetFile,true);
+        } catch (IOException e) {
+            logger.error("压缩图片失败");
+        }
+    }
+    public static void createCover4Video(File sourceFile, Integer width, File targetFile) {
+        try {
+            String cmd = "ffmpeg -i %s -y -vframes 1 -vf scale=%d:%d/a %s";
+            ProcessUtils.executeCommand(String.format(cmd, sourceFile.getAbsoluteFile(), width, width, targetFile.getAbsoluteFile()), false);
+        } catch (Exception e) {
+            logger.error("生成视频封面失败", e);
         }
     }
 }

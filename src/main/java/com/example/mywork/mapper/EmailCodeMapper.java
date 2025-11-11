@@ -1,7 +1,6 @@
 package com.example.mywork.mapper;
 
-import com.example.mywork.entity.EmailCode;
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+
 import org.apache.ibatis.annotations.Param;
 
 /**
@@ -12,9 +11,25 @@ import org.apache.ibatis.annotations.Param;
  * @author hb
  * @since 2025-03-23
  */
-public interface EmailCodeMapper extends BaseMapper<EmailCode> {
+public interface EmailCodeMapper<T, P> extends BaseMapper<T, P> {
 
-    void disableEmailCode(@Param("email")String email);
+    /**
+     * 根据EmailAndCode更新
+     */
+    Integer updateByEmailAndCode(@Param("bean") T t, @Param("email") String email, @Param("code") String code);
 
-    EmailCode selectByCode(String code);
+
+    /**
+     * 根据EmailAndCode删除
+     */
+    Integer deleteByEmailAndCode(@Param("email") String email, @Param("code") String code);
+
+
+    /**
+     * 根据EmailAndCode获取对象
+     */
+    T selectByEmailAndCode(@Param("email") String email, @Param("code") String code);
+
+    void disableEmailCode(@Param("email") String email);
+
 }

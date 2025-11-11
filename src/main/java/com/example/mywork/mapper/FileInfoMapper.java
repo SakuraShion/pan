@@ -37,4 +37,20 @@ public interface FileInfoMapper<T, P> extends BaseMapper<T, P> {
 
     Integer updateFileStatusWithOldStatus(@Param("fileId") String fileId, @Param("userId") String userId, @Param("bean") T t,
                                        @Param("oldStatus") Integer oldStatus);
+
+    void updateFileDelFlagBatch(@Param("bean") FileInfo fileInfo,
+                                @Param("userId") String userId,
+                                @Param("filePidList") List<String> filePidList,
+                                @Param("fileIdList") List<String> fileIdList,
+                                @Param("oldDelFlag") Integer oldDelFlag);
+
+    void delFileBatch(@Param("userId") String userId,
+                      @Param("filePidList") List<String> filePidList,
+                      @Param("fileIdList") List<String> fileIdList,
+                      @Param("oldDelFlag") Integer oldDelFlag);
+
+    Long selectUseSpace(@Param("userId") String userId);
+
+    void deleteFileByUserId(@Param("userId") String userId);
+
 }

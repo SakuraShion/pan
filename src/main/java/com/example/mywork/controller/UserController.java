@@ -58,7 +58,7 @@ public class UserController {
     @GlobalInterceptor
     @GetMapping("/register")
     private ResponseVo register(HttpSession httpSession,
-                               @VerfiyParam(required = true,regex = VerifyRegexEnum.EMALL) String email,
+                               @VerfiyParam(required = true,regex = VerifyRegexEnum.EMAIL) String email,
                                @VerfiyParam(required = true) String checkcode,
                                @VerfiyParam(required = true) String type,
                                @VerfiyParam(required = true) String nickName,
@@ -97,7 +97,7 @@ public class UserController {
     @GlobalInterceptor
     @GetMapping("/login")
     private ResponseVo login(HttpSession httpSession,
-                                @VerfiyParam(required = true,regex = VerifyRegexEnum.EMALL) String email,
+                                @VerfiyParam(required = true,regex = VerifyRegexEnum.EMAIL) String email,
                                 @VerfiyParam(required = true) String checkcode,
                                 @VerfiyParam(required = true,regex = VerifyRegexEnum.PASSWORD) String password){
         try {
@@ -116,7 +116,7 @@ public class UserController {
     @PostMapping("/resetPwd")
     @GlobalInterceptor(checkParasm = true)
     public ResponseVo resetPwd(HttpSession httpSession,
-                               @VerfiyParam(required = true,regex = VerifyRegexEnum.EMALL,max = 150)String email,
+                               @VerfiyParam(required = true,regex = VerifyRegexEnum.EMAIL,max = 150)String email,
                                @VerfiyParam(required = true,regex = VerifyRegexEnum.PASSWORD,min = 8,max = 18) String password,
                                @VerfiyParam(required = true) String checkcode,
                                @VerfiyParam(required = true) String emailCode){

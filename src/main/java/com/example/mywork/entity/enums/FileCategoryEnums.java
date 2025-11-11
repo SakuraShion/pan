@@ -30,4 +30,13 @@ public enum FileCategoryEnums {
         return null;
     }
 
+    public static FileCategoryEnums getByCode(String code) {
+        for (FileCategoryEnums item : FileCategoryEnums.values()) {
+            if (item.getCode().equals(code)) {
+                return item;
+            }
+        }
+        return null;
+    }
+
 }

@@ -17,6 +17,11 @@ public class Constants {
      * 过期时间 1分钟
      */
     public static final Integer REDIS_KEY_EXPIRES_ONE_MIN = 60;
+    public static final String IMAGE_PNG_SUFFIX = ".png";
+    public static final String FILE_FOLDER_TEMP="/temp/";
+    public static final String FILE_FOLDER_FILE = "/file/";
+    public static final Integer LENGTH_150 = 150;
+
     /**
      * 过期时间 1天
      */

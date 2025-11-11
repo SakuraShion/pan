@@ -3,6 +3,7 @@ package com.example.mywork.mapper;
 import com.example.mywork.entity.User;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.example.mywork.entity.po.UserInfo;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * <p>
@@ -25,4 +26,45 @@ public interface UserMapper extends BaseMapper<User> {
     UserInfo selectByUserId(String userId);
 
     Integer updateByEmail(UserInfo userInfo, String email);
+
+    /**
+     * 根据Email删除
+     */
+    Integer deleteByEmail(@Param("email") String email);
+
+
+
+    /**
+     * 根据NickName更新
+     */
+    Integer updateByNickName(@Param("bean") T t, @Param("nickName") String nickName);
+
+
+    /**
+     * 根据NickName删除
+     */
+    Integer deleteByNickName(@Param("nickName") String nickName);
+
+
+
+
+    /**
+     * 根据QqOpenId更新
+     */
+    Integer updateByQqOpenId(@Param("bean") T t, @Param("qqOpenId") String qqOpenId);
+
+
+    /**
+     * 根据QqOpenId删除
+     */
+    Integer deleteByQqOpenId(@Param("qqOpenId") String qqOpenId);
+
+
+    /**
+     * 根据QqOpenId获取对象
+     */
+    T selectByQqOpenId(@Param("qqOpenId") String qqOpenId);
+
+
+    Integer updateUserSpace(@Param("userId") String userId, @Param("useSpace") Long useSpace, @Param("totalSpace") Long totalSpace);
 }

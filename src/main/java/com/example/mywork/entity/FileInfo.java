@@ -53,7 +53,7 @@ public class FileInfo extends Model<FileInfo> {
 
     private Boolean fileType;
 
-    private Boolean status;
+    private Integer status;
 
     private LocalDateTime recoveryTime;
 

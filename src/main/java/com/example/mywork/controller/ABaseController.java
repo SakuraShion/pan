@@ -47,13 +47,16 @@ public class ABaseController {
         return paginationResultVO;
     }
 
-    protected SessionWebUserDto getUserInfoFromSession(HttpSession session){
-        return (SessionWebUserDto)session.getAttribute(Constants.SESSION_KEY);
-    }
 
     protected SessionShareDto getSessionShareFromSession(HttpSession session, String shareId) {
         SessionShareDto sessionShareDto = (SessionShareDto) session.getAttribute(Constants.SESSION_SHARE_KEY + shareId);
         return sessionShareDto;
+    }
+
+
+    protected SessionWebUserDto getUserInfoFromSession(HttpSession session) {
+        SessionWebUserDto sessionWebUserDto = (SessionWebUserDto) session.getAttribute(Constants.SESSION_KEY);
+        return sessionWebUserDto;
     }
 
     protected void readFile(HttpServletResponse response, String filePath) throws IOException {

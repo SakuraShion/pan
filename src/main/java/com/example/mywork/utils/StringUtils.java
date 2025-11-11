@@ -33,4 +33,13 @@ public class StringUtils {
         }
         return true;
     }
+
+    public static String getFileSuffix(String fileName) {
+        Integer index = fileName.lastIndexOf(".");
+        if (index==-1){
+            return "";
+        }
+        String suffix=fileName.substring(index);
+        return suffix;
+    }
 }

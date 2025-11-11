@@ -2,8 +2,12 @@ package com.example.mywork.controller;
 
 import com.example.mywork.annotation.GlobalInterceptor;
 import com.example.mywork.entity.enums.FileCategoryEnums;
+import com.example.mywork.entity.enums.ResponseCodeEnum;
+import com.example.mywork.entity.query.FileInfoQuery;
 import com.example.mywork.entity.vo.ResponseVo;
 import com.example.mywork.service.FileInfoService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -12,21 +16,26 @@ import javax.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping("file")
-public class FileInfoController {
+public class FileInfoController extends CommonFileController {
 
     @Resource
     private FileInfoService fileInfoService;
 
+
     /**
-     * 分页查询
+     * 根据条件分页查询
      */
-    @RequestMapping("loadDataList")
-    @GlobalInterceptor
-    public ResponseVo loadDataList(HttpSession session, String category,int pageOn) {
-        FileCategoryEnums fileCategory= FileCategoryEnums.getFileCategory(category);
-        if (null!=category){
-            return ResponseVo.ok("成功").setData(fileInfoService.findListByPage(fileCategory.getCategory(),session.getAttribute("userId"),pageOn));
+    @RequestMapping("/loadDataList")
+    @GlobalInterceptor(checkParams = true)
+    public ResponseVo loadDataList(HttpSession session, FileInfoQuery query, String category) {
+        FileCategoryEnums categoryEnum = FileCategoryEnums.getByCode(category);
+        if (null != categoryEnum) {
+            query.setFileCategory(categoryEnum.getCategory());
         }
-        return ResponseVo.fail("失败");
+        query.setUserId(getUserInfoFromSession(session).getUserId());
+        query.setOrderBy("last_update_time desc");
+        query.setDelFlag(FileDelFlagEnums.USING.getFlag());
+        PaginationResultVO result = fileInfoService.findListByPage(query);
+        return getSuccessResponseVO(convert2PaginationVO(result, FileInfoVO.class));
     }
 }

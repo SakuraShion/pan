@@ -37,4 +37,8 @@ public interface UserService extends IService<User> {
     List<UserInfo> findListByParam(UserInfoQuery userInfoQuery);
 
     void resetPwd(String email, String password, String emailCode);
+
+    void changeUserSpace(String userId, Integer changeSpace);
+
+    SessionWebUserDto qqLogin(String code);
 }

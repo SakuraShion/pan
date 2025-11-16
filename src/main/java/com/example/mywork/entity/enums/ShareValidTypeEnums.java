@@ -28,6 +28,7 @@ public enum ShareValidTypeEnums {
         return type;
     }
 
+
     public Integer getDays() {
         return days;
     }

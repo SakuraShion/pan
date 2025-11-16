@@ -47,17 +47,17 @@ public class FileInfo extends Model<FileInfo> {
 
     private LocalDateTime lastUpdateTime;
 
-    private Boolean folderType;
+    private Integer folderType;
 
-    private Boolean fileCategory;
+    private Integer fileCategory;
 
-    private Boolean fileType;
+    private Integer fileType;
 
     private Integer status;
 
     private LocalDateTime recoveryTime;
 
-    private Boolean delFlag;
+    private Integer delFlag;
 
 
     @Override

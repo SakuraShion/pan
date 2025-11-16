@@ -3,9 +3,19 @@ package com.example.mywork.entity.constants;
 public class Constants {
     public static final String CHECK_CODE_KEY = "CHECK_CODE_KEY";
     public static final String CHECK_CODE_KEY_EMAIL = "CHECK_CODE_KEY_EMAIL";
-
+    public static final String ZERO_STR = "0";
     public static final Integer LENGTH=5;
     public static final Integer LENGTH_15=15;
+
+    public static final String VIEW_OBJ_RESULT_KEY = "result";
+
+    public static final String M3U8_NAME = "index.m3u8";
+
+    public static final Integer LENGTH_10=10;
+
+    public static final Integer LENGTH_20 = 20;
+
+    public static final String TS_NAME = "index.ts";
 
     public static final Integer ZERO=0;
 

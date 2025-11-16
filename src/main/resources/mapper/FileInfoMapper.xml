@@ -671,6 +671,4 @@
         recovery_time = VALUES(recovery_time),
         del_flag = VALUES(del_flag)
     </insert>
-
-    <update id="updateByFileIdAndUserId" parameterType=""
 </mapper>

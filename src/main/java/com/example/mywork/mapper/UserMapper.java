@@ -37,7 +37,7 @@ public interface UserMapper extends BaseMapper<User> {
     /**
      * 根据NickName更新
      */
-    Integer updateByNickName(@Param("bean") T t, @Param("nickName") String nickName);
+    Integer updateByNickName(@Param("bean")  User user, @Param("nickName") String nickName);
 
 
     /**
@@ -51,7 +51,8 @@ public interface UserMapper extends BaseMapper<User> {
     /**
      * 根据QqOpenId更新
      */
-    Integer updateByQqOpenId(@Param("bean") T t, @Param("qqOpenId") String qqOpenId);
+    Integer updateByQqOpenId(@Param("bean") User user, @Param("qqOpenId") String qqOpenId);
+
 
 
     /**
@@ -63,8 +64,10 @@ public interface UserMapper extends BaseMapper<User> {
     /**
      * 根据QqOpenId获取对象
      */
-    T selectByQqOpenId(@Param("qqOpenId") String qqOpenId);
+    User selectByQqOpenId(@Param("qqOpenId") String qqOpenId);
 
 
     Integer updateUserSpace(@Param("userId") String userId, @Param("useSpace") Long useSpace, @Param("totalSpace") Long totalSpace);
+
+    Integer updateByUserId(@Param("bean")UserInfo userInfo, @Param("userId")String userId);
 }

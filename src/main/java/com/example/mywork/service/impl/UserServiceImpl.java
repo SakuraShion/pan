@@ -1,6 +1,7 @@
 package com.example.mywork.service.impl;
 
 import com.example.mywork.commpone.RedisCommpont;
+import com.example.mywork.config.AppConfig;
 import com.example.mywork.dto.SessionWebUserDto;
 import com.example.mywork.dto.SysSettingDto;
 import com.example.mywork.dto.UserSpaceDto;
@@ -15,10 +16,16 @@ import com.example.mywork.mapper.UserMapper;
 import com.example.mywork.service.EmailCodeService;
 import com.example.mywork.service.UserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.example.mywork.utils.OKHttpUtils;
 import com.example.mywork.utils.StringUtils;
+import lombok.extern.flogger.Flogger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Date;
@@ -44,6 +51,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Resource
     private RedisCommpont redisCommpont;
+
+    @Resource
+    private AppConfig appConfig;
+
+    private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
     @Override
     public User getByEamil(String email) {
@@ -136,5 +148,53 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         UserInfo userInfo=new UserInfo();
         userInfo.setPassword(StringUtils.encodeByMd5(password));
         this.userMapper.updateByEmail(userInfo,email);
+    }
+
+    @Override
+    public void changeUserSpace(String userId, Integer changeSpace) {
+        Long space = changeSpace * Constants.MB;
+        this.userMapper.updateUserSpace(userId,null,space);
+        redisCommpont.resetUserSpaceUse(userId);
+    }
+
+    private String getQQOpenId(String accessToken) throws BusinessException {
+        return "";
+    }
+
+    @Override
+    public SessionWebUserDto qqLogin(String code) {
+        return null;
+    }
+    private String getQQAccessToken(String code) {
+        /**
+         * 返回结果是字符串 access_token=*&expires_in=7776000&refresh_token=* 返回错误 callback({UcWebConstants.VIEW_OBJ_RESULT_KEY:111,error_description:"error msg"})
+         */
+        String accessToken = null;
+        String url = null;
+
+        try {
+            url = String.format(appConfig.getQqUrlAccessToken(), appConfig.getQqAppId(), appConfig.getQqAppKey(), code, URLEncoder.encode(appConfig
+                    .getQqUrlRedirect(), "utf-8"));
+        }catch (UnsupportedEncodingException e) {
+            logger.error("encode失败");
+            String tokenResult = OKHttpUtils.getRequest(url);
+            if (tokenResult==null|| tokenResult.contains(Constants.VIEW_OBJ_RESULT_KEY)){
+                logger.error("获取qqToken失败:{}", tokenResult);
+                throw new BusinessException("获取qqToken失败");
+            }
+            String[] params = tokenResult.split("&");
+            if (params!=null && params.length>0){
+                for (String param : params) {
+                    if (param.contains("access_token")){
+                        accessToken = param.split("=")[1];
+                        break;
+                    }
+                }
+            }
+
+        }
+        return accessToken;
+
+
     }
 }

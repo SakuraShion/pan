@@ -53,6 +53,96 @@ select
 from user where user_id=#{userId}
     </select>
 
+    <!-- 根据Email删除-->
+    <delete id="deleteByEmail">
+        delete
+        from user_info
+        where email = #{email}
+    </delete>
+
+    <!-- 根据NickName删除-->
+    <delete id="deleteByNickName">
+        delete
+        from user_info
+        where nick_name = #{nickName}
+    </delete>
+
+    <!-- 根据QqOpenId修改-->
+    <update id="updateByQqOpenId" parameterType="com.example.mywork.entity.User">
+        UPDATE user_info
+        <set>
+            <if test="bean.userId != null">
+                user_id = #{bean.userId},
+            </if>
+            <if test="bean.nickName != null">
+                nick_name = #{bean.nickName},
+            </if>
+            <if test="bean.email != null">
+                email = #{bean.email},
+            </if>
+            <if test="bean.qqAvatar != null">
+                qq_avatar = #{bean.qqAvatar},
+            </if>
+            <if test="bean.password != null">
+                password = #{bean.password},
+            </if>
+            <if test="bean.joinTime != null">
+                join_time = #{bean.joinTime},
+            </if>
+            <if test="bean.lastLoginTime != null">
+                last_login_time = #{bean.lastLoginTime},
+            </if>
+            <if test="bean.status != null">
+                status = #{bean.status},
+            </if>
+            <if test="bean.useSpace != null">
+                use_space = #{bean.useSpace},
+            </if>
+            <if test="bean.totalSpace != null">
+                total_space = #{bean.totalSpace},
+            </if>
+        </set>
+        where qq_open_id=#{qqOpenId}
+    </update>
+
+    <!-- 根据NickName修改-->
+    <update id="updateByNickName" parameterType="com.example.mywork.entity.User">
+        UPDATE user_info
+        <set>
+            <if test="bean.userId != null">
+                user_id = #{bean.userId},
+            </if>
+            <if test="bean.email != null">
+                email = #{bean.email},
+            </if>
+            <if test="bean.qqOpenId != null">
+                qq_open_id = #{bean.qqOpenId},
+            </if>
+            <if test="bean.qqAvatar != null">
+                qq_avatar = #{bean.qqAvatar},
+            </if>
+            <if test="bean.password != null">
+                password = #{bean.password},
+            </if>
+            <if test="bean.joinTime != null">
+                join_time = #{bean.joinTime},
+            </if>
+            <if test="bean.lastLoginTime != null">
+                last_login_time = #{bean.lastLoginTime},
+            </if>
+            <if test="bean.status != null">
+                status = #{bean.status},
+            </if>
+            <if test="bean.useSpace != null">
+                use_space = #{bean.useSpace},
+            </if>
+            <if test="bean.totalSpace != null">
+                total_space = #{bean.totalSpace},
+            </if>
+        </set>
+        where nick_name=#{nickName}
+    </update>
+
     <update id="updateByEmail">
         UPDATE user
         <set>
@@ -88,6 +178,75 @@ from user where user_id=#{userId}
             </if>
         </set>
         where email=#{email}
+    </update>
+
+    <update id="updateUserSpace">
+        update user_info
+        <set>
+            <if test="useSpace != null">
+                use_space = use_space + #{useSpace},
+            </if>
+            <if test="totalSpace != null">
+                total_space = total_space + #{totalSpace},
+            </if>
+        </set>
+        where user_id = #{userId}
+        <if test="useSpace != null">
+            <![CDATA[ and (use_space + #{useSpace}) <= total_space ]]>
+        </if>
+        <if test="totalSpace != null">
+            <![CDATA[ and (total_space + #{totalSpace}) >= use_space ]]>
+        </if>
+    </update>
+
+    <!-- 根据PrimaryKey获取对象-->
+    <select id="selectByQqOpenId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from user_info where qq_open_id=#{qqOpenId}
+    </select>
+
+    <!-- 根据QqOpenId删除-->
+    <delete id="deleteByQqOpenId">
+        delete
+        from user_info
+        where qq_open_id = #{qqOpenId}
+    </delete>
+
+    <update id="updateByUserId" parameterType="com.example.mywork.entity.User">
+        update user_info <set>
+        <if test="bean.nickName != null">
+            nick_name = #{bean.nickName},
+        </if>
+        <if test="bean.email != null">
+            email = #{bean.email},
+        </if>
+        <if test="bean.qqOpenId != null">
+            qq_open_id = #{bean.qqOpenId},
+        </if>
+        <if test="bean.qqAvatar != null">
+            qq_avatar = #{bean.qqAvatar},
+        </if>
+        <if test="bean.password != null">
+            password = #{bean.password},
+        </if>
+        <if test="bean.joinTime != null">
+            join_time = #{bean.joinTime},
+        </if>
+        <if test="bean.lastLoginTime != null">
+            last_login_time = #{bean.lastLoginTime},
+        </if>
+        <if test="bean.status != null">
+            status = #{bean.status},
+        </if>
+        <if test="bean.useSpace != null">
+            use_space = #{bean.useSpace},
+        </if>
+        <if test="bean.totalSpace != null">
+            total_space = #{bean.totalSpace},
+        </if>
+    </set>
+        where user_id=#{userId}
     </update>
 
 </mapper>
